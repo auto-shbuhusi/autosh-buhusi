@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Detalii Mașină</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #b86910;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .detalii-header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .galerie {
+      flex: 1;
+    }
+
+    .galerie img {
+      width: 100%;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      object-fit: cover;
+    }
+
+    .info {
+      flex: 1;
+    }
+
+    .info h2 {
+      color: #b86910;
+      margin-bottom: 1rem;
+    }
+
+    .info p {
+      margin: 0.5rem 0;
+      font-size: 1rem;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 2rem;
+      text-decoration: none;
+      background: #b86910;
+      color: white;
+      padding: 0.6rem 1rem;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Detalii Mașină</h1>
+</header>
+
+<div class="container" id="detaliiMasina">
+  <p>Se încarcă detalii...</p>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDwlwNbcJm63HnS-8Qic97Y5EVEwv1PLcE",
+    authDomain: "auto-sh-buhusi.firebaseapp.com",
+    projectId: "auto-sh-buhusi",
+    storageBucket: "auto-sh-buhusi.appspot.com",
+    messagingSenderId: "343562966028",
+    appId: "1:343562966028:web:46f23ad72b566e37638a29"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+
+  const container = document.getElementById("detaliiMasina");
+
+  if (!id) {
+    container.innerHTML = "<p>ID mașină lipsă.</p>";
+  } else {
+    const docRef = doc(db, "masini", id);
+    getDoc(docRef).then((docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+
+        const imaginiHTML = (data.imagini || [data.imagine]).map(url => 
+          `<img src="${url}" alt="Poza mașină">`
+        ).join("");
+
+        container.innerHTML = `
+          <div class="detalii-header">
+            <div class="galerie">${imaginiHTML}</div>
+            <div class="info">
+              <h2>${data.marca}</h2>
+              <p><strong>An:</strong> ${data.an}</p>
+              <p><strong>Motor:</strong> ${data.motor}</p>
+              <p><strong>Cutie:</strong> ${data.cutie}</p>
+              <p><strong>Preț:</strong> ${data.pret}</p>
+              <p><strong>Descriere:</strong> ${data.descriere || "Fără descriere."}</p>
+              <a class="back-link" href="index.html">Înapoi la listă</a>
+            </div>
+          </div>
+        `;
+      } else {
+        container.innerHTML = "<p>Mașina nu a fost găsită.</p>";
+      }
+    }).catch((error) => {
+      console.error(error);
+      container.innerHTML = "<p>Eroare la încărcarea datelor.</p>";
+    });
+  }
+</script>
+
+</body>
+</html>
