@@ -3,39 +3,67 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AutoSH-Buhuşi - Mașini de vânzare la un click distanta</title>
+  <title>AutoSH-Buhuşi</title>
   <style>
-    body { font-family: Arial; margin: 0; background: #f5f5f5; }
-    header { background: #b86910; color: white; padding: 1rem; text-align: center; }
-    .container { max-width: 1100px; margin: auto; padding: 2rem; }
-    .car-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
-    .car-card {
-      background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      overflow: hidden; display: flex; flex-direction: column;
+    body { font-family: Arial; background: #f5f5f5; margin: 0; }
+
+    header {
+      background: #c1680b;
+      color: white;
+      padding: 2rem;
+      text-align: center;
     }
-    .car-card img { width: 100%; height: 200px; object-fit: cover; }
-    .car-info { padding: 1rem; flex: 1; }
-    .car-info h3 { margin: 0 0 0.5rem 0; color: #b86910; }
-    .car-info p { margin: 0.3rem 0; }
-    footer { background: #b86910; color: white; text-align: center; padding: 1rem; margin-top: 2rem; }
+
+    h1 { margin: 0; font-size: 2rem; }
+    p.sub { margin: 0.5rem 0 0; }
+
+    .masini {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem;
+      margin: 2rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 1rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover { transform: scale(1.02); }
+
+    .card img {
+      width: 100%;
+      border-radius: 10px;
+      max-height: 180px;
+      object-fit: cover;
+    }
+
+    .card a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .car-info p {
+      margin: 0.3rem 0;
+    }
+
+    .car-info h3 {
+      margin: 0.5rem 0 0.3rem;
+      color: #b86910;
+    }
   </style>
 </head>
 <body>
   <header>
     <h1>AutoSH-Buhuşi</h1>
-    <p>Mașini second-hand în stare impecabilă</p>
+    <p class="sub">Mașini second-hand în stare impecabilă</p>
   </header>
 
-  <div class="container">
-    <h2>Mașini disponibile</h2>
-    <div class="car-list" id="carList"></div>
-  </div>
+  <div class="masini" id="masiniContainer"></div>
 
-  <footer>
-    <p>&copy; 2025 AutoSH-Buhuşi</p>
-  </footer>
-
-  <!-- Firebase Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
     import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
@@ -52,30 +80,30 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    const loadMasini = async () => {
-      const masiniRef = collection(db, "masini");
-      const snapshot = await getDocs(masiniRef);
-      const carList = document.getElementById("carList");
+    async function loadMasini() {
+      const querySnapshot = await getDocs(collection(db, "masini"));
+      const container = document.getElementById("masiniContainer");
 
-      snapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         const masina = doc.data();
         const card = document.createElement("div");
-        card.className = "car-card";
+        card.className = "card";
         card.innerHTML = `
-          <img src="${masina.imagine}" alt="${masina.marca}">
-          <div class="car-info">
-            <h3>${masina.marca}</h3>
-            <p>Model: ${masina.model}</p>
-            <p>An: ${masina.an}</p>
-            <p>Motor: ${masina.motor}</p>
-            <p>Cutie: ${masina.cutie}</p>
-            <p>Kilometri: ${masina.kilometri}</p>
-            <p><strong>Preț: ${masina.pret}</strong></p>
-          </div>
+          <a href="detalii.html?id=${doc.id}">
+            <img src="${masina.imagine}" alt="${masina.marca} ${masina.model}">
+            <div class="car-info">
+              <h3>${masina.marca} ${masina.model}</h3>
+              <p>An: ${masina.an}</p>
+              <p>Motor: ${masina.motor}</p>
+              <p>Cutie: ${masina.cutie}</p>
+              <p>Kilometri: ${masina.kilometri}</p>
+              <p><strong>Preț: ${masina.pret}</strong></p>
+            </div>
+          </a>
         `;
-        carList.appendChild(card);
+        container.appendChild(card);
       });
-    };
+    }
 
     loadMasini();
   </script>
