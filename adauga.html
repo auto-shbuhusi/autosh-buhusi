@@ -35,6 +35,9 @@
   <form id="formMasina">
     <label>Marca</label>
     <input type="text" id="marca" required />
+    
+    <label>Model</label>
+    <input type="text" id="model" required />
 
     <label>An</label>
     <input type="number" id="an" required />
@@ -47,6 +50,9 @@
 
     <label>Preț</label>
     <input type="text" id="pret" required />
+    
+    <label>Kilometri</label>
+    <input type="text" id="kilometri" required />
 
     <label>Link imagine (ex: https://i.postimg.cc/...)</label>
     <input type="text" id="imagine" required />
@@ -77,15 +83,17 @@
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const marca = document.getElementById("marca").value;
+      const model = document.getElementById("model").value;
       const an = document.getElementById("an").value;
       const motor = document.getElementById("motor").value;
       const cutie = document.getElementById("cutie").value;
       const pret = document.getElementById("pret").value;
+      const kilometri = document.getElementById("kilometri").value;
       const imagine = document.getElementById("imagine").value;
 
       try {
         await addDoc(collection(db, "masini"), {
-          marca, an, motor, cutie, pret, imagine
+          marca, model, an, motor, cutie, pret, kilometri, imagine
         });
         mesaj.textContent = "Mașina a fost adăugată cu succes!";
         form.reset();
