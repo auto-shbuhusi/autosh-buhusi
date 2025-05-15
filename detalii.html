@@ -8,8 +8,84 @@
     body { font-family: Arial; background: #f5f5f5; margin: 0; }
     header { background: #bf6f0d; color: white; padding: 1rem; text-align: center; }
     .container { max-width: 800px; margin: 2rem auto; background: white; padding: 2rem; border-radius: 10px; }
-    .carousel { display: flex; overflow-x: auto; gap: 1rem; margin-bottom: 1rem; }
-    .carousel img { max-height: 300px; border-radius: 10px; }
+
+    .carousel-wrapper {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      height: 300px;
+      margin-bottom: 1rem;
+      background-color: white;
+    }
+
+    .carousel {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+      width: 100%;
+      height: 100%;
+    }
+
+    .carousel img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background-color: white;
+      flex-shrink: 0;
+      cursor: zoom-in;
+    }
+
+    .carousel-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.5);
+      border: none;
+      color: white;
+      font-size: 2rem;
+      cursor: pointer;
+      padding: 0.3rem 0.6rem;
+      border-radius: 5px;
+      z-index: 10;
+    }
+
+    .carousel-button.left {
+      left: 10px;
+    }
+
+    .carousel-button.right {
+      right: 10px;
+    }
+
+    /* Lightbox styles */
+    .lightbox {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .lightbox img {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+      box-shadow: 0 0 20px rgba(255,255,255,0.4);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 2rem;
+      color: white;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
     h2 { color: #b86910; }
   </style>
 </head>
@@ -20,8 +96,18 @@
   </header>
 
   <div class="container">
-    <div class="carousel" id="carousel"></div>
+    <div class="carousel-wrapper">
+      <button class="carousel-button left" id="prevBtn">◀️</button>
+      <div class="carousel" id="carousel"></div>
+      <button class="carousel-button right" id="nextBtn">▶️</button>
+    </div>
     <div id="info"></div>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="closeLightbox">✖️</button>
+    <img id="lightboxImg" src="" alt="Imagine mărită" />
   </div>
 
   <script type="module">
@@ -50,11 +136,56 @@
       const masina = docSnap.data();
       const info = document.getElementById("info");
       const carousel = document.getElementById("carousel");
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImg = document.getElementById("lightboxImg");
+      const closeBtn = document.getElementById("closeLightbox");
 
-      (masina.imagini || []).forEach(link => {
+      const imagini = masina.imagini || [];
+      let currentIndex = 0;
+
+      // Adaugă imaginile în carusel
+      imagini.forEach(link => {
         const img = document.createElement("img");
         img.src = link;
+        img.alt = "Imagine mașină";
+        img.addEventListener("click", () => {
+          lightbox.style.display = "flex";
+          lightboxImg.src = link;
+        });
         carousel.appendChild(img);
+      });
+
+      // Navigare carusel
+      const updateCarousel = () => {
+        carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
+      };
+
+      document.getElementById("prevBtn").addEventListener("click", () => {
+        if (currentIndex > 0) {
+          currentIndex--;
+          updateCarousel();
+        }
+      });
+
+      document.getElementById("nextBtn").addEventListener("click", () => {
+        if (currentIndex < imagini.length - 1) {
+          currentIndex++;
+          updateCarousel();
+        }
+      });
+
+      // Închidere lightbox
+      closeBtn.addEventListener("click", () => {
+        lightbox.style.display = "none";
+        lightboxImg.src = "";
+      });
+
+      // Închidere când dai click în afara imaginii
+      lightbox.addEventListener("click", (e) => {
+        if (e.target === lightbox) {
+          lightbox.style.display = "none";
+          lightboxImg.src = "";
+        }
       });
 
       info.innerHTML = `
