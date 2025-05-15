@@ -3,67 +3,138 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AutoSH-Buhuşi</title>
+  <title>AutoSH-Buhuşi - Mașini de vânzare</title>
   <style>
-    body { font-family: Arial; background: #f5f5f5; margin: 0; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f5f5f5;
+    }
 
-    header {
-      background: #c1680b;
+    header, footer {
+      background-color: #b86910;
       color: white;
-      padding: 2rem;
       text-align: center;
+      padding: 1rem;
     }
 
-    h1 { margin: 0; font-size: 2rem; }
-    p.sub { margin: 0.5rem 0 0; }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
 
-    .masini {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    h2 {
+      text-align: center;
+      color: #b86910;
+      margin-bottom: 2rem;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
       gap: 1rem;
-      margin: 2rem;
+      justify-content: center;
+      margin-bottom: 2rem;
     }
 
-    .card {
+    .filters input,
+    .filters select,
+    .filters button {
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+
+    .car-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .car-card {
       background: white;
       border-radius: 10px;
-      padding: 1rem;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      transition: transform 0.2s ease;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s;
+      cursor: pointer;
     }
 
-    .card:hover { transform: scale(1.02); }
+    .car-card:hover {
+      transform: scale(1.02);
+    }
 
-    .card img {
+    .car-card img {
       width: 100%;
-      border-radius: 10px;
-      max-height: 180px;
+      height: 200px;
       object-fit: cover;
     }
 
-    .card a {
-      text-decoration: none;
-      color: inherit;
+    .car-info {
+      padding: 1rem;
+      flex: 1;
+    }
+
+    .car-info h3 {
+      margin: 0 0 0.5rem;
+      color: #b86910;
     }
 
     .car-info p {
       margin: 0.3rem 0;
+      font-size: 0.95rem;
     }
 
-    .car-info h3 {
-      margin: 0.5rem 0 0.3rem;
-      color: #b86910;
+    @media (max-width: 768px) {
+      .filters {
+        flex-direction: column;
+        align-items: center;
+      }
     }
   </style>
 </head>
 <body>
   <header>
     <h1>AutoSH-Buhuşi</h1>
-    <p class="sub">Mașini second-hand în stare impecabilă</p>
+    <p>Mașini second-hand în stare impecabilă</p>
   </header>
 
-  <div class="masini" id="masiniContainer"></div>
+  <div class="container">
+    <h2>Mașini disponibile</h2>
 
+    <!-- Form Filtru -->
+    <form id="filtru" class="filters">
+      <input type="text" id="cautare" placeholder="Caută marcă sau model" />
+      <select id="marca">
+        <option value="">Toate mărcile</option>
+        <option value="Audi">Audi</option>
+        <option value="BMW">BMW</option>
+        <option value="Dacia">Dacia</option>
+        <option value="Ford">Ford</option>
+        <option value="Mercedes">Mercedes</option>
+        <option value="Volkswagen">Volkswagen</option>
+        <!-- Adaugă alte opțiuni după necesitate -->
+      </select>
+      <input type="number" id="pretMin" placeholder="Preț minim" />
+      <input type="number" id="pretMax" placeholder="Preț maxim" />
+      <input type="number" id="anMin" placeholder="An minim" />
+      <input type="number" id="anMax" placeholder="An maxim" />
+      <button type="submit">Aplică filtre</button>
+    </form>
+
+    <!-- Lista mașini -->
+    <div class="car-list" id="carList"></div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 AutoSH-Buhuşi</p>
+  </footer>
+
+  <!-- Firebase Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
     import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
@@ -80,32 +151,62 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    async function loadMasini() {
-      const querySnapshot = await getDocs(collection(db, "masini"));
-      const container = document.getElementById("masiniContainer");
+    let toateMasinile = [];
 
-      querySnapshot.forEach((doc) => {
-        const masina = doc.data();
+    const afiseazaMasini = (masini) => {
+      const carList = document.getElementById("carList");
+      carList.innerHTML = "";
+
+      masini.forEach(masina => {
         const card = document.createElement("div");
-        card.className = "card";
+        card.className = "car-card";
+        card.onclick = () => window.location.href = `detalii.html?id=${masina.id}`;
         card.innerHTML = `
-          <a href="detalii.html?id=${doc.id}">
-            <img src="${masina.imagine}" alt="${masina.marca} ${masina.model}">
-            <div class="car-info">
-              <h3>${masina.marca} ${masina.model}</h3>
-              <p>An: ${masina.an}</p>
-              <p>Motor: ${masina.motor}</p>
-              <p>Cutie: ${masina.cutie}</p>
-              <p>Kilometri: ${masina.kilometri}</p>
-              <p><strong>Preț: ${masina.pret}</strong></p>
-            </div>
-          </a>
+          <img src="${masina.thumbnail || masina.imagini?.[0] || 'placeholder.jpg'}" alt="${masina.marca}">
+          <div class="car-info">
+            <h3>${masina.marca} ${masina.model}</h3>
+            <p>An: ${masina.an}</p>
+            <p>Motor: ${masina.motor}</p>
+            <p>Cutie: ${masina.cutie}</p>
+            <p>Kilometri: ${masina.kilometri}</p>
+            <p><strong>Preț: ${masina.pret} €</strong></p>
+          </div>
         `;
-        container.appendChild(card);
+        carList.appendChild(card);
       });
-    }
+    };
 
-    loadMasini();
+    const aplicaFiltre = () => {
+      const cautare = document.getElementById("cautare").value.toLowerCase();
+      const marca = document.getElementById("marca").value;
+      const pretMin = parseInt(document.getElementById("pretMin").value) || 0;
+      const pretMax = parseInt(document.getElementById("pretMax").value) || Infinity;
+      const anMin = parseInt(document.getElementById("anMin").value) || 0;
+      const anMax = parseInt(document.getElementById("anMax").value) || 9999;
+
+      const filtrate = toateMasinile.filter(m => {
+        const pret = parseInt(m.pret);
+        const an = parseInt(m.an);
+        const marcaMatch = !marca || m.marca === marca;
+        const textMatch = m.marca.toLowerCase().includes(cautare) || m.model.toLowerCase().includes(cautare);
+        return textMatch && marcaMatch && pret >= pretMin && pret <= pretMax && an >= anMin && an <= anMax;
+      });
+
+      afiseazaMasini(filtrate);
+    };
+
+    document.getElementById("filtru").addEventListener("submit", e => {
+      e.preventDefault();
+      aplicaFiltre();
+    });
+
+    const incarcaMasini = async () => {
+      const snapshot = await getDocs(collection(db, "masini"));
+      toateMasinile = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      afiseazaMasini(toateMasinile);
+    };
+
+    incarcaMasini();
   </script>
 </body>
 </html>
