@@ -5,67 +5,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AutoSH-Buhuşi - Mașini de vânzare</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background-color: #f5f5f5;
-    }
-
-    header, footer {
-      background-color: #b86910;
-      color: white;
-      text-align: center;
-      padding: 1rem;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
-
-    h2 {
-      text-align: center;
-      color: #b86910;
-      margin-bottom: 2rem;
-    }
+    body { font-family: Arial, sans-serif; margin: 0; background: #f5f5f5; }
+    header { background: #b86910; color: white; padding: 1rem; text-align: center; }
+    .container { max-width: 1100px; margin: auto; padding: 2rem; }
 
     .filters {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 1rem;
-      justify-content: center;
       margin-bottom: 2rem;
     }
 
-    .filters input,
-    .filters select,
-    .filters button {
-      padding: 0.5rem;
+    .filters input, .filters select, .filters button {
+      padding: 0.6rem;
       border: 1px solid #ccc;
       border-radius: 5px;
-      font-size: 1rem;
+    }
+
+    .filters button {
+      background-color: #b86910;
+      color: white;
+      cursor: pointer;
+      border: none;
+      transition: background 0.3s ease;
+    }
+
+    .filters button:hover {
+      background-color: #945b0c;
     }
 
     .car-list {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 1.5rem;
     }
 
     .car-card {
       background: white;
       border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      transition: transform 0.2s;
       cursor: pointer;
-    }
-
-    .car-card:hover {
-      transform: scale(1.02);
     }
 
     .car-card img {
@@ -76,24 +58,23 @@
 
     .car-info {
       padding: 1rem;
-      flex: 1;
     }
 
     .car-info h3 {
-      margin: 0 0 0.5rem;
+      margin: 0 0 0.5rem 0;
       color: #b86910;
     }
 
     .car-info p {
       margin: 0.3rem 0;
-      font-size: 0.95rem;
     }
 
-    @media (max-width: 768px) {
-      .filters {
-        flex-direction: column;
-        align-items: center;
-      }
+    footer {
+      background: #b86910;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      margin-top: 2rem;
     }
   </style>
 </head>
@@ -106,27 +87,45 @@
   <div class="container">
     <h2>Mașini disponibile</h2>
 
-    <!-- Form Filtru -->
+    <!-- Filtre -->
     <form id="filtru" class="filters">
       <input type="text" id="cautare" placeholder="Caută marcă sau model" />
       <select id="marca">
         <option value="">Toate mărcile</option>
         <option value="Audi">Audi</option>
         <option value="BMW">BMW</option>
+        <option value="Chevrolet">Chevrolet</option>
+        <option value="Citroen">Citroen</option>
         <option value="Dacia">Dacia</option>
+        <option value="Fiat">Fiat</option>
         <option value="Ford">Ford</option>
+        <option value="Honda">Honda</option>
+        <option value="Hyundai">Hyundai</option>
+        <option value="Jeep">Jeep</option>
+        <option value="Kia">Kia</option>
+        <option value="Lexus">Lexus</option>
+        <option value="Mazda">Mazda</option>
         <option value="Mercedes">Mercedes</option>
+        <option value="Nissan">Nissan</option>
+        <option value="Opel">Opel</option>
+        <option value="Peugeot">Peugeot</option>
+        <option value="Renault">Renault</option>
+        <option value="Seat">Seat</option>
+        <option value="Skoda">Skoda</option>
+        <option value="Subaru">Subaru</option>
+        <option value="Suzuki">Suzuki</option>
+        <option value="Toyota">Toyota</option>
         <option value="Volkswagen">Volkswagen</option>
-        <!-- Adaugă alte opțiuni după necesitate -->
+        <option value="Volvo">Volvo</option>
+        <!-- Adaugă alte mărci dacă vrei -->
       </select>
-      <input type="number" id="pretMin" placeholder="Preț minim" />
       <input type="number" id="pretMax" placeholder="Preț maxim" />
-      <input type="number" id="anMin" placeholder="An minim" />
-      <input type="number" id="anMax" placeholder="An maxim" />
+      <input type="number" id="anFabricatie" placeholder="An maxim" />
+      <input type="number" id="kilometri" placeholder="Kilometri maxim" />
       <button type="submit">Aplică filtre</button>
+      <button type="button" id="resetBtn">Resetează filtre</button>
     </form>
 
-    <!-- Lista mașini -->
     <div class="car-list" id="carList"></div>
   </div>
 
@@ -134,7 +133,7 @@
     <p>&copy; 2025 AutoSH-Buhuşi</p>
   </footer>
 
-  <!-- Firebase Script -->
+  <!-- Script Firebase -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
     import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
@@ -150,7 +149,6 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-
     let toateMasinile = [];
 
     const afiseazaMasini = (masini) => {
@@ -162,14 +160,15 @@
         card.className = "car-card";
         card.onclick = () => window.location.href = `detalii.html?id=${masina.id}`;
         card.innerHTML = `
-          <img src="${masina.thumbnail || masina.imagini?.[0] || 'placeholder.jpg'}" alt="${masina.marca}">
+          <img src="${masina.thumbnail || masina.imagini?.[0] || ''}" alt="${masina.marca}">
           <div class="car-info">
-            <h3>${masina.marca} ${masina.model}</h3>
+            <h3>${masina.marca}</h3>
+            <p>Model: ${masina.model}</p>
             <p>An: ${masina.an}</p>
             <p>Motor: ${masina.motor}</p>
             <p>Cutie: ${masina.cutie}</p>
             <p>Kilometri: ${masina.kilometri}</p>
-            <p><strong>Preț: ${masina.pret} €</strong></p>
+            <p><strong>Preț: ${masina.pret}</strong></p>
           </div>
         `;
         carList.appendChild(card);
@@ -177,19 +176,26 @@
     };
 
     const aplicaFiltre = () => {
-      const cautare = document.getElementById("cautare").value.toLowerCase();
-      const marca = document.getElementById("marca").value;
-      const pretMin = parseInt(document.getElementById("pretMin").value) || 0;
+      const cautare = document.getElementById("cautare").value.trim().toLowerCase();
+      const marcaSelectata = document.getElementById("marca").value.trim().toLowerCase();
       const pretMax = parseInt(document.getElementById("pretMax").value) || Infinity;
-      const anMin = parseInt(document.getElementById("anMin").value) || 0;
-      const anMax = parseInt(document.getElementById("anMax").value) || 9999;
+      const anMax = parseInt(document.getElementById("anFabricatie").value) || Infinity;
+      const kmMax = parseInt(document.getElementById("kilometri").value) || Infinity;
 
       const filtrate = toateMasinile.filter(m => {
-        const pret = parseInt(m.pret);
-        const an = parseInt(m.an);
-        const marcaMatch = !marca || m.marca === marca;
-        const textMatch = m.marca.toLowerCase().includes(cautare) || m.model.toLowerCase().includes(cautare);
-        return textMatch && marcaMatch && pret >= pretMin && pret <= pretMax && an >= anMin && an <= anMax;
+        const marca = (m.marca || "").trim().toLowerCase();
+        const model = (m.model || "").trim().toLowerCase();
+        const pret = parseInt(m.pret) || 0;
+        const an = parseInt(m.an) || 0;
+        const km = parseInt(m.kilometri) || 0;
+
+        const textMatch = marca.includes(cautare) || model.includes(cautare);
+        const marcaMatch = marcaSelectata === "" || marca === marcaSelectata;
+        const pretMatch = pret <= pretMax;
+        const anMatch = an <= anMax;
+        const kmMatch = km <= kmMax;
+
+        return textMatch && marcaMatch && pretMatch && anMatch && kmMatch;
       });
 
       afiseazaMasini(filtrate);
@@ -198,6 +204,11 @@
     document.getElementById("filtru").addEventListener("submit", e => {
       e.preventDefault();
       aplicaFiltre();
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      document.getElementById("filtru").reset();
+      afiseazaMasini(toateMasinile);
     });
 
     const incarcaMasini = async () => {
