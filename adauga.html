@@ -16,7 +16,7 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
     label { display: block; margin-top: 1rem; }
-    input { width: 100%; padding: 0.5rem; margin-top: 0.3rem; }
+    input, select { width: 100%; padding: 0.5rem; margin-top: 0.3rem; }
     button {
       margin-top: 1.5rem;
       background: #b86910;
@@ -54,8 +54,20 @@
     <label>Kilometri</label>
     <input type="text" id="kilometri" required />
 
-    <label>Link imagine (ex: https://i.postimg.cc/...)</label>
-    <input type="text" id="imagine" required />
+    <label>Tracțiune</label>
+    <input type="text" id="tractiune" required />
+
+    <label>Carburant</label>
+    <input type="text" id="carburant" required />
+
+    <label>Cai Putere</label>
+    <input type="number" id="caiPutere" required />
+
+    <label>Linkuri imagini (separate prin virgulă)</label>
+    <input type="text" id="imagini" required />
+
+    <label>Link thumbnail principal</label>
+    <input type="text" id="thumbnail" required />
 
     <button type="submit">Adaugă mașină</button>
     <div class="message" id="mesaj"></div>
@@ -77,29 +89,31 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    const form = document.getElementById("formMasina");
-    const mesaj = document.getElementById("mesaj");
-
-    form.addEventListener("submit", async (e) => {
+    document.getElementById("formMasina").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const marca = document.getElementById("marca").value;
-      const model = document.getElementById("model").value;
-      const an = document.getElementById("an").value;
-      const motor = document.getElementById("motor").value;
-      const cutie = document.getElementById("cutie").value;
-      const pret = document.getElementById("pret").value;
-      const kilometri = document.getElementById("kilometri").value;
-      const imagine = document.getElementById("imagine").value;
+      
+      const data = {
+        marca: marca.value,
+        model: model.value,
+        an: an.value,
+        motor: motor.value,
+        cutie: cutie.value,
+        pret: pret.value,
+        kilometri: kilometri.value,
+        tractiune: tractiune.value,
+        carburant: carburant.value,
+        caiPutere: parseInt(caiPutere.value),
+        imagini: imagini.value.split(",").map(link => link.trim()),
+        imagine: thumbnail.value
+      };
 
       try {
-        await addDoc(collection(db, "masini"), {
-          marca, model, an, motor, cutie, pret, kilometri, imagine
-        });
-        mesaj.textContent = "Mașina a fost adăugată cu succes!";
-        form.reset();
+        await addDoc(collection(db, "masini"), data);
+        mesaj.textContent = "Mașina a fost adăugată!";
+        formMasina.reset();
       } catch (error) {
+        mesaj.textContent = "Eroare la salvare.";
         console.error(error);
-        mesaj.textContent = "Eroare la salvare. Verifică consola.";
       }
     });
   </script>
