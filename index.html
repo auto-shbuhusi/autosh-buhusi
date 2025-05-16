@@ -5,32 +5,55 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AutoSH-Buhuşi - Mașini de vânzare</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; background: #f5f5f5; }
-    header { background: #b86910; color: white; padding: 1rem; text-align: center; }
-    .container { max-width: 1100px; margin: auto; padding: 2rem; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f5f5f5;
+    }
+    header {
+      background: #b86910;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 2rem;
+    }
 
     .filters {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 1rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
     }
 
-    .filters input, .filters select, .filters button {
+    .filters input,
+    .filters select {
       padding: 0.6rem;
       border: 1px solid #ccc;
       border-radius: 5px;
     }
 
-    .filters button {
+    .filter-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .filter-buttons button {
+      padding: 0.6rem 1.2rem;
       background-color: #b86910;
       color: white;
-      cursor: pointer;
       border: none;
+      border-radius: 5px;
+      cursor: pointer;
       transition: background 0.3s ease;
     }
 
-    .filters button:hover {
+    .filter-buttons button:hover {
       background-color: #945b0c;
     }
 
@@ -43,7 +66,7 @@
     .car-card {
       background: white;
       border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -88,42 +111,46 @@
     <h2>Mașini disponibile</h2>
 
     <!-- Filtre -->
-    <form id="filtru" class="filters">
-      <input type="text" id="cautare" placeholder="Caută marcă sau model" />
-      <select id="marca">
-        <option value="">Toate mărcile</option>
-        <option value="Audi">Audi</option>
-        <option value="BMW">BMW</option>
-        <option value="Chevrolet">Chevrolet</option>
-        <option value="Citroen">Citroen</option>
-        <option value="Dacia">Dacia</option>
-        <option value="Fiat">Fiat</option>
-        <option value="Ford">Ford</option>
-        <option value="Honda">Honda</option>
-        <option value="Hyundai">Hyundai</option>
-        <option value="Jeep">Jeep</option>
-        <option value="Kia">Kia</option>
-        <option value="Lexus">Lexus</option>
-        <option value="Mazda">Mazda</option>
-        <option value="Mercedes">Mercedes</option>
-        <option value="Nissan">Nissan</option>
-        <option value="Opel">Opel</option>
-        <option value="Peugeot">Peugeot</option>
-        <option value="Renault">Renault</option>
-        <option value="Seat">Seat</option>
-        <option value="Skoda">Skoda</option>
-        <option value="Subaru">Subaru</option>
-        <option value="Suzuki">Suzuki</option>
-        <option value="Toyota">Toyota</option>
-        <option value="Volkswagen">Volkswagen</option>
-        <option value="Volvo">Volvo</option>
-        <!-- Adaugă alte mărci dacă vrei -->
-      </select>
-      <input type="number" id="pretMax" placeholder="Preț maxim" />
-      <input type="number" id="anFabricatie" placeholder="An maxim" />
-      <input type="number" id="kilometri" placeholder="Kilometri maxim" />
-      <button type="submit">Aplică filtre</button>
-      <button type="button" id="resetBtn">Resetează filtre</button>
+    <form id="filtru">
+      <div class="filters">
+        <input type="text" id="cautare" placeholder="Caută marcă sau model" />
+        <select id="marca">
+          <option value="">Toate mărcile</option>
+          <option value="Audi">Audi</option>
+          <option value="BMW">BMW</option>
+          <option value="Chevrolet">Chevrolet</option>
+          <option value="Citroen">Citroen</option>
+          <option value="Dacia">Dacia</option>
+          <option value="Fiat">Fiat</option>
+          <option value="Ford">Ford</option>
+          <option value="Honda">Honda</option>
+          <option value="Hyundai">Hyundai</option>
+          <option value="Jeep">Jeep</option>
+          <option value="Kia">Kia</option>
+          <option value="Lexus">Lexus</option>
+          <option value="Mazda">Mazda</option>
+          <option value="Mercedes">Mercedes</option>
+          <option value="Nissan">Nissan</option>
+          <option value="Opel">Opel</option>
+          <option value="Peugeot">Peugeot</option>
+          <option value="Renault">Renault</option>
+          <option value="Seat">Seat</option>
+          <option value="Skoda">Skoda</option>
+          <option value="Subaru">Subaru</option>
+          <option value="Suzuki">Suzuki</option>
+          <option value="Toyota">Toyota</option>
+          <option value="Volkswagen">Volkswagen</option>
+          <option value="Volvo">Volvo</option>
+        </select>
+        <input type="number" id="pretMax" placeholder="Preț maxim" />
+        <input type="number" id="anFabricatie" placeholder="An maxim" />
+        <input type="number" id="kilometri" placeholder="Kilometri maxim" />
+      </div>
+
+      <div class="filter-buttons">
+        <button type="submit">Aplică filtre</button>
+        <button type="button" id="resetBtn">Resetează filtre</button>
+      </div>
     </form>
 
     <div class="car-list" id="carList"></div>
