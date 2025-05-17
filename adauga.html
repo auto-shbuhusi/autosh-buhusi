@@ -3,75 +3,167 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Adaugă Mașină - AutoSH-Buhuşi</title>
+  <title>Adaugă Mașină</title>
   <style>
-    body { font-family: Arial; background: #f5f5f5; margin: 0; padding: 2rem; }
-    h1 { text-align: center; color: #b86910; }
-    form {
-      max-width: 500px;
-      margin: auto;
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+    }
+
+    header {
+      background: #bf6f0d;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 2rem auto;
       background: white;
       padding: 2rem;
       border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    label { display: block; margin-top: 1rem; }
-    input, select { width: 100%; padding: 0.5rem; margin-top: 0.3rem; }
+
+    h2 {
+      color: #b86910;
+      margin-top: 2rem;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 1rem;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.3rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .checkbox-group label {
+      font-weight: normal;
+    }
+
     button {
-      margin-top: 1.5rem;
-      background: #b86910;
+      margin-top: 2rem;
+      padding: 0.7rem 1.5rem;
+      background-color: #bf6f0d;
       color: white;
       border: none;
-      padding: 0.7rem;
-      width: 100%;
       border-radius: 5px;
+      font-size: 1rem;
       cursor: pointer;
     }
-    .message { text-align: center; margin-top: 1rem; }
+
+    button:hover {
+      background-color: #9f5b0c;
+    }
+
+    .category {
+      margin-top: 1.5rem;
+    }
   </style>
 </head>
 <body>
-  <h1>Adaugă Mașină</h1>
-  <form id="formMasina">
-    <label>Marca</label>
-    <input type="text" id="marca" required />
-    
-    <label>Model</label>
-    <input type="text" id="model" required />
+  <header>
+    <h1>Adaugă Mașină</h1>
+  </header>
 
-    <label>An</label>
-    <input type="number" id="an" required />
+  <div class="container">
+    <form id="formMasina">
+      <label>Marca:</label>
+      <input type="text" name="marca" required />
 
-    <label>Motor</label>
-    <input type="text" id="motor" required />
+      <label>Model:</label>
+      <input type="text" name="model" required />
 
-    <label>Cutie</label>
-    <input type="text" id="cutie" required />
+      <label>An:</label>
+      <input type="number" name="an" required />
 
-    <label>Preț</label>
-    <input type="text" id="pret" required />
-    
-    <label>Kilometri</label>
-    <input type="text" id="kilometri" required />
+      <label>Motor:</label>
+      <input type="text" name="motor" required />
 
-    <label>Tracțiune</label>
-    <input type="text" id="tractiune" required />
+      <label>Carburant:</label>
+      <input type="text" name="carburant" required />
 
-    <label>Carburant</label>
-    <input type="text" id="carburant" required />
+      <label>Tracțiune:</label>
+      <input type="text" name="tractiune" required />
 
-    <label>Cai Putere</label>
-    <input type="number" id="caiPutere" required />
+      <label>Cai putere:</label>
+      <input type="number" name="caiPutere" required />
 
-    <label>Linkuri imagini (separate prin virgulă)</label>
-    <input type="text" id="imagini" required />
+      <label>Cutie de viteze:</label>
+      <input type="text" name="cutie" required />
 
-    <label>Link thumbnail principal</label>
-    <input type="text" id="thumbnail" required />
+      <label>Kilometri:</label>
+      <input type="number" name="kilometri" required />
 
-    <button type="submit">Adaugă mașină</button>
-    <div class="message" id="mesaj"></div>
-  </form>
+      <label>Preț:</label>
+      <input type="text" name="pret" required />
+
+      <label>Linkuri imagini (separate prin virgulă):</label>
+      <textarea name="imagini" rows="3" placeholder="https://link1.jpg, https://link2.jpg..." required></textarea>
+
+      <label>Thumbnail (link imagine principală):</label>
+      <input type="text" name="thumbnail" placeholder="https://linkImaginePrincipala.jpg" required />
+
+      <div class="category">
+        <h2>Audio și Conectivitate</h2>
+        <div class="checkbox-group">
+          <label><input type="checkbox" name="dotari" value="Bluetooth" /> Bluetooth</label>
+          <label><input type="checkbox" name="dotari" value="Sistem de navigare" /> Sistem de navigare</label>
+          <label><input type="checkbox" name="dotari" value="Radio DAB" /> Radio DAB</label>
+        </div>
+      </div>
+
+      <div class="category">
+        <h2>Confort</h2>
+        <div class="checkbox-group">
+          <label><input type="checkbox" name="dotari" value="Climatronic 2 zone" /> Climatronic 2 zone</label>
+          <label><input type="checkbox" name="dotari" value="Scaune față încălzite" /> Scaune față încălzite</label>
+          <label><input type="checkbox" name="dotari" value="Geamuri electrice" /> Geamuri electrice</label>
+        </div>
+      </div>
+
+      <div class="category">
+        <h2>Electronice și Asistență</h2>
+        <div class="checkbox-group">
+          <label><input type="checkbox" name="dotari" value="Pilot automat" /> Pilot automat</label>
+          <label><input type="checkbox" name="dotari" value="Senzori parcare" /> Senzori parcare</label>
+          <label><input type="checkbox" name="dotari" value="Proiectoare ceață" /> Proiectoare ceață</label>
+        </div>
+      </div>
+
+      <div class="category">
+        <h2>Siguranță</h2>
+        <div class="checkbox-group">
+          <label><input type="checkbox" name="dotari" value="ABS" /> ABS</label>
+          <label><input type="checkbox" name="dotari" value="ESP" /> ESP</label>
+          <label><input type="checkbox" name="dotari" value="Airbaguri" /> Airbaguri</label>
+        </div>
+      </div>
+
+      <label>Dotări adiționale (separate prin virgulă):</label>
+      <input type="text" name="dotariText" placeholder="Ex: Oglinzi electrice, Scaune sport, Jante aliaj" />
+
+      <button type="submit">Adaugă Mașina</button>
+    </form>
+  </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
@@ -91,29 +183,39 @@
 
     document.getElementById("formMasina").addEventListener("submit", async (e) => {
       e.preventDefault();
+
+      const form = e.target;
+      const formData = new FormData(form);
+      const dotari = formData.getAll("dotari");
+      const dotariText = formData.get("dotariText")
+        .split(",")
+        .map(s => s.trim())
+        .filter(Boolean);
       
-      const data = {
-        marca: marca.value,
-        model: model.value,
-        an: an.value,
-        motor: motor.value,
-        cutie: cutie.value,
-        pret: pret.value,
-        kilometri: kilometri.value,
-        tractiune: tractiune.value,
-        carburant: carburant.value,
-        caiPutere: parseInt(caiPutere.value),
-        imagini: imagini.value.split(",").map(link => link.trim()),
-        imagine: thumbnail.value
+      const toateDotarile = [...dotari, ...dotariText];
+
+      const masina = {
+        marca: formData.get("marca"),
+        model: formData.get("model"),
+        an: parseInt(formData.get("an")),
+        motor: formData.get("motor"),
+        cutie: formData.get("cutie"),
+        carburant: formData.get("carburant"),
+        tractiune: formData.get("tractiune"),
+        caiPutere: parseInt(formData.get("caiPutere")),
+        kilometri: parseInt(formData.get("kilometri")),
+        pret: formData.get("pret"),
+        thumbnail: formData.get("thumbnail"),
+        imagini: formData.get("imagini").split(",").map(s => s.trim()),
+        dotari: toateDotarile
       };
 
       try {
-        await addDoc(collection(db, "masini"), data);
-        mesaj.textContent = "Mașina a fost adăugată!";
-        formMasina.reset();
+        await addDoc(collection(db, "masini"), masina);
+        alert("Mașina a fost adăugată cu succes!");
+        form.reset();
       } catch (error) {
-        mesaj.textContent = "Eroare la salvare.";
-        console.error(error);
+        alert("Eroare la adăugare: " + error.message);
       }
     });
   </script>
