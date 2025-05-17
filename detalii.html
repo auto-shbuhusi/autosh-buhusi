@@ -1,139 +1,129 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Detalii Mașină</title>
   <style>
     body {
-      font-family: Arial;
-      background: #f5f5f5;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f9f9;
       margin: 0;
+      padding: 0;
     }
 
     header {
-      background: #bf6f0d;
+      background-color: #b86910;
       color: white;
-      padding: 1rem;
       text-align: center;
+      padding: 20px 0;
+      font-size: 28px;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
 
     .container {
-      max-width: 800px;
-      margin: 2rem auto;
-      background: white;
-      padding: 2rem;
+      max-width: 1000px;
+      margin: 30px auto;
+      background: #ffffff;
+      padding: 30px;
       border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
     }
 
-    .carousel-wrapper {
-      position: relative;
-      overflow: hidden;
-      width: 100%;
-      aspect-ratio: 4 / 3;
-      margin-bottom: 1rem;
-      background-color: white;
-    }
-
-    .carousel {
-      display: flex;
-      transition: transform 0.5s ease-in-out;
-      height: 100%;
-    }
-
-    .carousel img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      background-color: white;
-      flex-shrink: 0;
-      cursor: zoom-in;
-    }
-
-    .carousel-button {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(0, 0, 0, 0.5);
-      border: none;
-      color: white;
-      font-size: 2rem;
-      cursor: pointer;
-      padding: 0.3rem 0.6rem;
-      border-radius: 5px;
-      z-index: 10;
-    }
-
-    .carousel-button.left {
-      left: 10px;
-    }
-
-    .carousel-button.right {
-      right: 10px;
-    }
-
-    .lightbox {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.8);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-
-    .lightbox img {
-      max-width: 90%;
-      max-height: 90%;
-      object-fit: contain;
-      box-shadow: 0 0 20px rgba(255,255,255,0.4);
-    }
-
-    .lightbox-close {
-      position: absolute;
-      top: 20px;
-      right: 30px;
-      font-size: 2rem;
-      color: white;
-      background: none;
-      border: none;
-      cursor: pointer;
+    h1 {
+      font-size: 26px;
+      margin-bottom: 20px;
+      color: #333;
     }
 
     h2 {
+      margin-top: 35px;
       color: #b86910;
+      border-bottom: 2px solid #b86910;
+      padding-bottom: 5px;
+    }
+
+    .carusel {
+      display: flex;
+      overflow-x: auto;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .carusel img {
+      height: 200px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .carusel img:hover {
+      transform: scale(1.05);
+    }
+
+    .dotari-container {
+      margin-top: 20px;
+    }
+
+    .categorie-dotari {
+      margin-bottom: 25px;
+    }
+
+    .categorie-dotari h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      border-left: 4px solid #b86910;
+      padding-left: 10px;
+      color: #444;
+    }
+
+    .dotare-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 5px;
+      font-size: 15px;
+      color: #333;
+    }
+
+    .dotare-item::before {
+      content: "✔️";
+      color: green;
+      margin-right: 8px;
+    }
+
+    p {
+      font-size: 16px;
+      margin: 6px 0;
+      color: #444;
+    }
+
+    span {
+      font-weight: bold;
+      color: #000;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>AutoSH-Buhuşi</h1>
-    <p>Mașini second-hand în stare impecabilă</p>
-  </header>
+
+  <header>AutoSH Buhuşi</header>
 
   <div class="container">
-    <div class="carousel-wrapper">
-      <button class="carousel-button left" id="prevBtn" aria-label="Imagine anterioară">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" viewBox="0 0 24 24">
-          <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-        </svg>
-      </button>
-      <div class="carousel" id="carousel"></div>
-      <button class="carousel-button right" id="nextBtn" aria-label="Imagine următoare">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" viewBox="0 0 24 24">
-          <path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/>
-        </svg>
-      </button>
-    </div>
-    <div id="info"></div>
-  </div>
+    <h1 id="titluMasina"></h1>
 
-  <div class="lightbox" id="lightbox">
-    <button class="lightbox-close" id="closeLightbox">✖️</button>
-    <img id="lightboxImg" src="" alt="Imagine mărită" />
+    <div class="carusel" id="caruselImagini"></div>
+
+    <h2>Detalii</h2>
+    <p>An: <span id="an"></span></p>
+    <p>Preț: <span id="pret"></span> EUR</p>
+    <p>Kilometri: <span id="km"></span> km</p>
+    <p>Motorizare: <span id="motor"></span></p>
+    <p>Cutie de viteze: <span id="cutie"></span></p>
+    <p>Carburant: <span id="carburant"></span></p>
+    <p>Tracțiune: <span id="tractiune"></span></p>
+    <p>Cai Putere: <span id="cp"></span></p>
+
+    <h2>Dotări</h2>
+    <div id="dotariContainer" class="dotari-container"></div>
   </div>
 
   <script type="module">
@@ -152,82 +142,109 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    const params = new URLSearchParams(location.search);
-    const id = params.get("id");
+    const urlParams = new URLSearchParams(window.location.search);
+    const masinaId = urlParams.get("id");
 
-    const docRef = doc(db, "masini", id);
-    const docSnap = await getDoc(docRef);
+    async function incarcaDetalii() {
+      const docRef = doc(db, "masini", masinaId);
+      const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      const masina = docSnap.data();
-      const info = document.getElementById("info");
-      const carousel = document.getElementById("carousel");
-      const lightbox = document.getElementById("lightbox");
-      const lightboxImg = document.getElementById("lightboxImg");
-      const closeBtn = document.getElementById("closeLightbox");
+      if (!docSnap.exists()) {
+        document.body.innerHTML = "<h2>Mașina nu a fost găsită.</h2>";
+        return;
+      }
 
-      const imagini = masina.imagini || [];
-      let currentIndex = 0;
+      const data = docSnap.data();
 
-      // Adaugă imaginile în carusel
-      imagini.forEach(link => {
-        const img = document.createElement("img");
-        img.src = link;
-        img.alt = "Imagine mașină";
-        img.addEventListener("click", () => {
-          lightbox.style.display = "flex";
-          lightboxImg.src = link;
+      document.getElementById("titluMasina").textContent = `${data.marca} ${data.model}`;
+      document.getElementById("an").textContent = data.an || "";
+      document.getElementById("pret").textContent = data.pret || "";
+      document.getElementById("km").textContent = data.kilometri || "";
+      document.getElementById("motor").textContent = data.motor || "";
+      document.getElementById("cutie").textContent = data.cutie || "";
+      document.getElementById("carburant").textContent = data.carburant || "";
+      document.getElementById("tractiune").textContent = data.tractiune || "";
+      document.getElementById("cp").textContent = data.caiPutere || "";
+
+      // Carusel imagini
+      const carusel = document.getElementById("caruselImagini");
+      if (data.imagini && Array.isArray(data.imagini)) {
+        data.imagini.forEach(url => {
+          const img = document.createElement("img");
+          img.src = url;
+          img.onclick = () => window.open(url, "_blank");
+          carusel.appendChild(img);
         });
-        carousel.appendChild(img);
-      });
+      }
 
-      const updateCarousel = () => {
-        const wrapperWidth = document.querySelector(".carousel-wrapper").offsetWidth;
-        carousel.style.transform = `translateX(-${currentIndex * wrapperWidth}px)`;
+      // Dotări pe categorii
+      const dotari = data.dotari || [];
+      const categorii = {
+        "Audio și Conectivitate": ["Bluetooth", "Sistem de navigare", "Radio DAB"],
+        "Confort": ["Climatronic 2 zone", "Scaune față încălzite", "Geamuri electrice"],
+        "Electronice și Asistență": ["Pilot automat", "Senzori parcare", "Proiectoare ceață", "Pilot automat adaptiv (distronic)"],
+        "Siguranță": ["ABS", "ESP", "Airbaguri", "Airbag cortina"]
       };
 
-      // Navigare carusel
-      document.getElementById("prevBtn").addEventListener("click", () => {
-        if (currentIndex > 0) {
-          currentIndex--;
-          updateCarousel();
-        }
+      const ramase = [];
+      const dotariPeCategorie = {};
+
+      for (const [cat, lista] of Object.entries(categorii)) {
+        dotariPeCategorie[cat] = [];
+        lista.forEach(dot => {
+          if (dotari.includes(dot)) {
+            dotariPeCategorie[cat].push(dot);
+          }
+        });
+      }
+
+      dotari.forEach(dot => {
+        const esteInclus = Object.values(categorii).some(lista => lista.includes(dot));
+        if (!esteInclus) ramase.push(dot);
       });
 
-      document.getElementById("nextBtn").addEventListener("click", () => {
-        if (currentIndex < imagini.length - 1) {
-          currentIndex++;
-          updateCarousel();
-        }
-      });
+      const container = document.getElementById("dotariContainer");
 
-      window.addEventListener("resize", updateCarousel);
-      updateCarousel(); // apel imediat
+      for (const [cat, lista] of Object.entries(dotariPeCategorie)) {
+        if (lista.length === 0) continue;
 
-      // Închidere lightbox
-      closeBtn.addEventListener("click", () => {
-        lightbox.style.display = "none";
-        lightboxImg.src = "";
-      });
+        const sect = document.createElement("div");
+        sect.className = "categorie-dotari";
 
-      lightbox.addEventListener("click", (e) => {
-        if (e.target === lightbox) {
-          lightbox.style.display = "none";
-          lightboxImg.src = "";
-        }
-      });
+        const h3 = document.createElement("h3");
+        h3.textContent = cat;
+        sect.appendChild(h3);
 
-      info.innerHTML = `
-        <h2>${masina.marca} ${masina.model}</h2>
-        <p>An: ${masina.an}</p>
-        <p>Motor: ${masina.motor}</p>
-        <p>Cutie: ${masina.cutie}</p>
-        <p>Kilometri: ${masina.kilometri}</p>
-        <p><strong>Preț: ${masina.pret}</strong></p>
-      `;
-    } else {
-      document.querySelector(".container").innerHTML = "<p>Mașina nu a fost găsită.</p>";
+        lista.forEach(d => {
+          const item = document.createElement("div");
+          item.className = "dotare-item";
+          item.textContent = d;
+          sect.appendChild(item);
+        });
+
+        container.appendChild(sect);
+      }
+
+      if (ramase.length > 0) {
+        const sect = document.createElement("div");
+        sect.className = "categorie-dotari";
+
+        const h3 = document.createElement("h3");
+        h3.textContent = "Dotări suplimentare";
+        sect.appendChild(h3);
+
+        ramase.forEach(d => {
+          const item = document.createElement("div");
+          item.className = "dotare-item";
+          item.textContent = d;
+          sect.appendChild(item);
+        });
+
+        container.appendChild(sect);
+      }
     }
+
+    incarcaDetalii();
   </script>
 </body>
 </html>
