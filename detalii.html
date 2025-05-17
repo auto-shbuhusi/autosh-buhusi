@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Detalii Mașină</title>
   <style>
     body {
@@ -15,19 +15,18 @@
       background-color: #b86910;
       color: white;
       text-align: center;
-      padding: 20px 0;
-      font-size: 28px;
+      padding: 15px 0;
+      font-size: 24px;
       font-weight: bold;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
 
     .container {
       max-width: 1000px;
       margin: 30px auto;
-      background: #ffffff;
+      background: white;
       padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
     }
 
     h1 {
@@ -43,22 +42,56 @@
       padding-bottom: 5px;
     }
 
-    .carusel {
+    .carusel-wrapper {
+      position: relative;
+      width: 100%;
+      height: 500px;
+      overflow: hidden;
+      margin-bottom: 30px;
+    }
+
+    .carusel-inner {
       display: flex;
-      overflow-x: auto;
-      gap: 10px;
-      margin-bottom: 20px;
+      height: 100%;
+      transition: transform 0.5s ease-in-out;
     }
 
-    .carusel img {
-      height: 200px;
-      border-radius: 8px;
+    .carusel-inner img {
+      flex-shrink: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 10px;
+      background-color: #eee;
       cursor: pointer;
-      transition: transform 0.2s;
     }
 
-    .carusel img:hover {
-      transform: scale(1.05);
+    .carusel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      cursor: pointer;
+      font-size: 20px;
+      z-index: 10;
+      border-radius: 5px;
+    }
+
+    .carusel-btn.prev { left: 10px; }
+    .carusel-btn.next { right: 10px; }
+
+    p {
+      font-size: 16px;
+      margin: 6px 0;
+      color: #444;
+    }
+
+    span {
+      font-weight: bold;
+      color: #000;
     }
 
     .dotari-container {
@@ -86,165 +119,146 @@
     }
 
     .dotare-item::before {
-      content: "✔️";
+      content: "✔";
       color: green;
       margin-right: 8px;
-    }
-
-    p {
-      font-size: 16px;
-      margin: 6px 0;
-      color: #444;
-    }
-
-    span {
-      font-weight: bold;
-      color: #000;
     }
   </style>
 </head>
 <body>
 
-  <header>AutoSH Buhuşi</header>
+<header>AutoSH Buhuşi</header>
 
-  <div class="container">
-    <h1 id="titluMasina"></h1>
+<div class="container">
+  <h1 id="titluMasina"></h1>
 
-    <div class="carusel" id="caruselImagini"></div>
-
-    <h2>Detalii</h2>
-    <p>An: <span id="an"></span></p>
-    <p>Preț: <span id="pret"></span> EUR</p>
-    <p>Kilometri: <span id="km"></span> km</p>
-    <p>Motorizare: <span id="motor"></span></p>
-    <p>Cutie de viteze: <span id="cutie"></span></p>
-    <p>Carburant: <span id="carburant"></span></p>
-    <p>Tracțiune: <span id="tractiune"></span></p>
-    <p>Cai Putere: <span id="cp"></span></p>
-
-    <h2>Dotări</h2>
-    <div id="dotariContainer" class="dotari-container"></div>
+  <div class="carusel-wrapper">
+    <div class="carusel-inner" id="caruselInner"></div>
+    <button class="carusel-btn prev" onclick="slidePrev()">‹</button>
+    <button class="carusel-btn next" onclick="slideNext()">›</button>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
+  <h2>Detalii</h2>
+  <p>An: <span id="an"></span></p>
+  <p>Preț: <span id="pret"></span> EUR</p>
+  <p>Kilometri: <span id="km"></span> km</p>
+  <p>Motorizare: <span id="motor"></span></p>
+  <p>Cutie de viteze: <span id="cutie"></span></p>
+  <p>Carburant: <span id="carburant"></span></p>
+  <p>Tracțiune: <span id="tractiune"></span></p>
+  <p>Cai Putere: <span id="cp"></span></p>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDwlwNbcJm63HnS-8Qic97Y5EVEwv1PLcE",
-      authDomain: "auto-sh-buhusi.firebaseapp.com",
-      projectId: "auto-sh-buhusi",
-      storageBucket: "auto-sh-buhusi.appspot.com",
-      messagingSenderId: "343562966028",
-      appId: "1:343562966028:web:46f23ad72b566e37638a29"
-    };
+  <h2>Dotări</h2>
+  <div id="dotariContainer" class="dotari-container"></div>
+</div>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const masinaId = urlParams.get("id");
+  const firebaseConfig = {
+    apiKey: "AIzaSyDwlwNbcJm63HnS-8Qic97Y5EVEwv1PLcE",
+    authDomain: "auto-sh-buhusi.firebaseapp.com",
+    projectId: "auto-sh-buhusi",
+    storageBucket: "auto-sh-buhusi.appspot.com",
+    messagingSenderId: "343562966028",
+    appId: "1:343562966028:web:46f23ad72b566e37638a29"
+  };
 
-    async function incarcaDetalii() {
-      const docRef = doc(db, "masini", masinaId);
-      const docSnap = await getDoc(docRef);
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-      if (!docSnap.exists()) {
-        document.body.innerHTML = "<h2>Mașina nu a fost găsită.</h2>";
-        return;
-      }
+  const urlParams = new URLSearchParams(window.location.search);
+  const masinaId = urlParams.get("id");
 
-      const data = docSnap.data();
+  let indexCurent = 0;
+  let imagini = [];
 
-      document.getElementById("titluMasina").textContent = `${data.marca} ${data.model}`;
-      document.getElementById("an").textContent = data.an || "";
-      document.getElementById("pret").textContent = data.pret || "";
-      document.getElementById("km").textContent = data.kilometri || "";
-      document.getElementById("motor").textContent = data.motor || "";
-      document.getElementById("cutie").textContent = data.cutie || "";
-      document.getElementById("carburant").textContent = data.carburant || "";
-      document.getElementById("tractiune").textContent = data.tractiune || "";
-      document.getElementById("cp").textContent = data.caiPutere || "";
+  async function incarcaDetalii() {
+    const docRef = doc(db, "masini", masinaId);
+    const docSnap = await getDoc(docRef);
 
-      // Carusel imagini
-      const carusel = document.getElementById("caruselImagini");
-      if (data.imagini && Array.isArray(data.imagini)) {
-        data.imagini.forEach(url => {
-          const img = document.createElement("img");
-          img.src = url;
-          img.onclick = () => window.open(url, "_blank");
-          carusel.appendChild(img);
-        });
-      }
-
-      // Dotări pe categorii
-      const dotari = data.dotari || [];
-      const categorii = {
-        "Audio și Conectivitate": ["Bluetooth", "Sistem de navigare", "Radio DAB"],
-        "Confort": ["Climatronic 2 zone", "Scaune față încălzite", "Geamuri electrice"],
-        "Electronice și Asistență": ["Pilot automat", "Senzori parcare", "Proiectoare ceață", "Pilot automat adaptiv (distronic)"],
-        "Siguranță": ["ABS", "ESP", "Airbaguri", "Airbag cortina"]
-      };
-
-      const ramase = [];
-      const dotariPeCategorie = {};
-
-      for (const [cat, lista] of Object.entries(categorii)) {
-        dotariPeCategorie[cat] = [];
-        lista.forEach(dot => {
-          if (dotari.includes(dot)) {
-            dotariPeCategorie[cat].push(dot);
-          }
-        });
-      }
-
-      dotari.forEach(dot => {
-        const esteInclus = Object.values(categorii).some(lista => lista.includes(dot));
-        if (!esteInclus) ramase.push(dot);
-      });
-
-      const container = document.getElementById("dotariContainer");
-
-      for (const [cat, lista] of Object.entries(dotariPeCategorie)) {
-        if (lista.length === 0) continue;
-
-        const sect = document.createElement("div");
-        sect.className = "categorie-dotari";
-
-        const h3 = document.createElement("h3");
-        h3.textContent = cat;
-        sect.appendChild(h3);
-
-        lista.forEach(d => {
-          const item = document.createElement("div");
-          item.className = "dotare-item";
-          item.textContent = d;
-          sect.appendChild(item);
-        });
-
-        container.appendChild(sect);
-      }
-
-      if (ramase.length > 0) {
-        const sect = document.createElement("div");
-        sect.className = "categorie-dotari";
-
-        const h3 = document.createElement("h3");
-        h3.textContent = "Dotări suplimentare";
-        sect.appendChild(h3);
-
-        ramase.forEach(d => {
-          const item = document.createElement("div");
-          item.className = "dotare-item";
-          item.textContent = d;
-          sect.appendChild(item);
-        });
-
-        container.appendChild(sect);
-      }
+    if (!docSnap.exists()) {
+      document.body.innerHTML = "<h2>Mașina nu a fost găsită.</h2>";
+      return;
     }
 
-    incarcaDetalii();
-  </script>
+    const data = docSnap.data();
+
+    document.getElementById("titluMasina").textContent = `${data.marca} ${data.model}`;
+    document.getElementById("an").textContent = data.an || "";
+    document.getElementById("pret").textContent = data.pret || "";
+    document.getElementById("km").textContent = data.kilometri || "";
+    document.getElementById("motor").textContent = data.motor || "";
+    document.getElementById("cutie").textContent = data.cutie || "";
+    document.getElementById("carburant").textContent = data.carburant || "";
+    document.getElementById("tractiune").textContent = data.tractiune || "";
+    document.getElementById("cp").textContent = data.caiPutere || "";
+
+    imagini = data.imagini || [];
+    const carusel = document.getElementById("caruselInner");
+    carusel.innerHTML = imagini.map(url => `<img src="${url}" onclick="window.open('${url}', '_blank')">`).join('');
+    afiseazaImagine();
+    afiseazaDotari(data.dotari || []);
+  }
+
+  function afiseazaImagine() {
+    const carusel = document.getElementById("caruselInner");
+    carusel.style.transform = `translateX(-${indexCurent * 100}%)`;
+  }
+
+  window.slideNext = () => {
+    if (indexCurent < imagini.length - 1) {
+      indexCurent++;
+      afiseazaImagine();
+    }
+  };
+
+  window.slidePrev = () => {
+    if (indexCurent > 0) {
+      indexCurent--;
+      afiseazaImagine();
+    }
+  };
+
+  function afiseazaDotari(dotari) {
+    const categorii = {
+      "Audio și Conectivitate": ["Bluetooth", "Sistem de navigare", "Radio DAB"],
+      "Confort": ["Climatronic 2 zone", "Scaune față încălzite", "Geamuri electrice"],
+      "Electronice și Asistență": ["Pilot automat", "Senzori parcare", "Proiectoare ceață", "Pilot automat adaptiv (distronic)"],
+      "Siguranță": ["ABS", "ESP", "Airbaguri", "Airbag cortina"]
+    };
+
+    const ramase = [];
+    const dotariPeCategorie = {};
+
+    for (const [cat, lista] of Object.entries(categorii)) {
+      dotariPeCategorie[cat] = lista.filter(d => dotari.includes(d));
+    }
+
+    dotari.forEach(dot => {
+      const eStandard = Object.values(categorii).flat().includes(dot);
+      if (!eStandard) ramase.push(dot);
+    });
+
+    const container = document.getElementById("dotariContainer");
+    for (const [cat, lista] of Object.entries(dotariPeCategorie)) {
+      if (lista.length === 0) continue;
+      const sect = document.createElement("div");
+      sect.className = "categorie-dotari";
+      sect.innerHTML = `<h3>${cat}</h3>` + lista.map(d => `<div class="dotare-item">${d}</div>`).join('');
+      container.appendChild(sect);
+    }
+
+    if (ramase.length > 0) {
+      const sect = document.createElement("div");
+      sect.className = "categorie-dotari";
+      sect.innerHTML = `<h3>Dotări suplimentare</h3>` + ramase.map(d => `<div class="dotare-item">${d}</div>`).join('');
+      container.appendChild(sect);
+    }
+  }
+
+  incarcaDetalii();
+</script>
 </body>
 </html>
