@@ -1,9 +1,30 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="UTF-8">
   <title>AutoSH Buhuşi</title>
   <style>
+        .filtru-grup {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .filtru-grup select,
+    .filtru-grup button {
+      flex: 1 1 calc(33.33% - 20px); /* 3 pe rând */
+      min-width: 150px;
+    }
+
+    @media (max-width: 768px) {
+      .filtru-grup select,
+      .filtru-grup button {
+        flex: 1 1 100%; /* 1 pe rând pe mobil */
+      }
+    }
+
     body {
       font-family: Arial, sans-serif;
       background-color: #f9f9f9;
@@ -70,6 +91,18 @@
       cursor: pointer;
       transition: transform 0.2s ease;
     }
+    .card {
+  width: 300px;
+  margin: 10px;
+}
+
+@media (max-width: 768px) {
+  .card {
+    width: 100%;
+    margin: 10px 0;
+  }
+}
+
 
     .card:hover {
       transform: scale(1.02);
@@ -80,6 +113,13 @@
       height: 180px;
       object-fit: cover;
     }
+    .carousel-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
 
     .card-content {
       padding: 15px;
@@ -96,6 +136,11 @@
       font-size: 15px;
       color: #555;
     }
+    button, select {
+  font-size: 16px;
+  padding: 10px;
+}
+
   </style>
 </head>
 <body>
