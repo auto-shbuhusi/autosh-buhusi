@@ -2,7 +2,6 @@
 <html lang="ro">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Detalii Mașină</title>
   <style>
     body {
@@ -121,9 +120,30 @@
     }
 
     .dotare-item::before {
-      content: "\2714";
+      content: "✔";
       color: green;
       margin-right: 8px;
+    }
+
+    .lightbox {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 90vh;
+      width: auto;
+      height: auto;
+      border-radius: 10px;
     }
   </style>
 </head>
@@ -152,6 +172,10 @@
 
   <h2>Dotări</h2>
   <div id="dotariContainer" class="dotari-container"></div>
+</div>
+
+<div class="lightbox" id="lightbox" onclick="inchideLightbox()">
+  <img id="lightbox-img" src="" />
 </div>
 
 <script type="module">
@@ -199,7 +223,7 @@
 
     imagini = data.imagini || [];
     const carusel = document.getElementById("caruselInner");
-    carusel.innerHTML = imagini.map(url => `<img src="${url}" onclick="window.open('${url}', '_blank')">`).join('');
+    carusel.innerHTML = imagini.map(url => `<img src="${url}" onclick="deschideLightbox('${url}')">`).join('');
     afiseazaImagine();
     afiseazaDotari(data.dotari || []);
   }
@@ -222,6 +246,20 @@
       afiseazaImagine();
     }
   };
+
+  function deschideLightbox(src) {
+    const lightbox = document.getElementById("lightbox");
+    const img = document.getElementById("lightbox-img");
+    img.src = src;
+    lightbox.style.display = "flex";
+  }
+
+  function inchideLightbox() {
+    document.getElementById("lightbox").style.display = "none";
+  }
+
+  window.deschideLightbox = deschideLightbox;
+  window.inchideLightbox = inchideLightbox;
 
   function afiseazaDotari(dotari) {
     const categorii = {
