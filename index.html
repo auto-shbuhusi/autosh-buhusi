@@ -88,6 +88,22 @@
       justify-content: center;
       gap: 10px;
     }
+.btn-aplica,
+.btn-reseteaza {
+  background-color: #b86910;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-aplica:hover,
+.btn-reseteaza:hover {
+  background-color: #944f0c; /* o nuanță mai închisă la hover */
+}
 
     @media (max-width: 768px) {
       .filtru-grup select,
@@ -218,8 +234,9 @@
       <option value="4x4">4x4</option>
     </select>
 
-      <button id="aplica">Aplică filtre</button>
-      <button id="reseteaza">Resetează filtre</button>
+<button id="aplica" class="btn-aplica">Aplică filtre</button>
+<button id="reseteaza" class="btn-reseteaza">Resetează filtre</button>
+
     </div>
   </div>
 
