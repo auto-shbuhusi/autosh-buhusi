@@ -1,28 +1,12 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>AutoSH Buhuşi</title>
   <style>
-        .filtru-grup {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .filtru-grup select,
-    .filtru-grup button {
-      flex: 1 1 calc(33.33% - 20px); /* 3 pe rând */
-      min-width: 150px;
-    }
-
-    @media (max-width: 768px) {
-      .filtru-grup select,
-      .filtru-grup button {
-        flex: 1 1 100%; /* 1 pe rând pe mobil */
-      }
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
@@ -30,72 +14,101 @@
       background-color: #f9f9f9;
       margin: 0;
       padding: 0;
+      font-size: 16px;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        font-size: 18px;
+      }
     }
 
     header {
       background-color: #b86910;
       color: white;
-      text-align: center;
       padding: 15px;
+    }
+
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .logo {
       font-size: 24px;
       font-weight: bold;
     }
-    .header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-}
 
-.logo {
-  font-size: 24px;
-  font-weight: bold;
-}
+    .contact-button {
+      background-color: transparent;
+      border: 2px solid white;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
 
-.contact-button {
-  background-color: transparent;
-  border: 2px solid white;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 5px;
-  text-decoration: none;
-  font-weight: bold;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
+    .contact-button:hover {
+      background-color: white;
+      color: #b86910;
+    }
 
-.contact-button:hover {
-  background-color: white;
-  color: #b86910;
-}
+    @media (max-width: 768px) {
+      .header-container {
+        flex-direction: column;
+        align-items: flex-start;
+      }
 
+      .contact-button {
+        margin-top: 10px;
+        align-self: flex-end;
+      }
+    }
 
     .container {
       max-width: 1200px;
       margin: 30px auto;
-      padding: 20px;
+      padding: 10px;
       background: white;
       border-radius: 8px;
       box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
     }
 
+    .filtru-grup,
     .filtre {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 20px;
+      gap: 10px;
       margin-bottom: 30px;
     }
 
-    .filtre select {
+    .filtru-grup select,
+    .filtru-grup button,
+    .filtre select,
+    .filtre button {
+      flex: 1 1 calc(33.33% - 20px);
+      min-width: 150px;
       padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
       font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .filtru-grup select,
+      .filtru-grup button,
+      .filtre select,
+      .filtre button {
+        flex: 1 1 100%;
+      }
     }
 
     .filtre button {
-      padding: 10px 20px;
       background-color: #b86910;
       color: white;
       border: none;
@@ -111,7 +124,7 @@
     }
 
     .card {
-      width: 280px;
+      width: 300px;
       border: 1px solid #ddd;
       border-radius: 8px;
       overflow: hidden;
@@ -120,18 +133,13 @@
       cursor: pointer;
       transition: transform 0.2s ease;
     }
-    .card {
-  width: 300px;
-  margin: 10px;
-}
 
-@media (max-width: 768px) {
-  .card {
-    width: 100%;
-    margin: 10px 0;
-  }
-}
-
+    @media (max-width: 768px) {
+      .card {
+        width: 100%;
+        margin: 10px 0;
+      }
+    }
 
     .card:hover {
       transform: scale(1.02);
@@ -139,16 +147,11 @@
 
     .card img {
       width: 100%;
-      height: 180px;
+      height: auto;
+      max-height: 200px;
       object-fit: cover;
+      display: block;
     }
-    .carousel-image {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  margin: 0 auto;
-}
-
 
     .card-content {
       padding: 15px;
@@ -165,11 +168,6 @@
       font-size: 15px;
       color: #555;
     }
-    button, select {
-  font-size: 16px;
-  padding: 10px;
-}
-
   </style>
 </head>
 <body>
@@ -180,7 +178,6 @@
     <a href="contact.html" class="contact-button">Contact</a>
   </div>
 </header>
-
 
 <div class="container">
   <div class="filtre">
@@ -298,31 +295,31 @@
     });
   }
 
-aplica.onclick = () => {
-  const marcaVal = marca.value.trim();
-  const pretVal = pret.value;
-  const cutieVal = cutie.value;
-  const carburantVal = carburant.value;
-  const tractiuneVal = tractiune.value;
+  aplica.onclick = () => {
+    const marcaVal = marca.value.trim();
+    const pretVal = pret.value;
+    const cutieVal = cutie.value;
+    const carburantVal = carburant.value;
+    const tractiuneVal = tractiune.value;
 
-  const filtrate = masini.filter(m => {
-    const pretCurat = parseInt(String(m.pret).replace(/\./g, ''));
+    const filtrate = masini.filter(m => {
+      const pretCurat = parseInt(String(m.pret).replace(/\./g, ''));
 
-    return (!marcaVal || m.marca?.toLowerCase() === marcaVal.toLowerCase())
-      && (!cutieVal || m.cutie === cutieVal)
-      && (!carburantVal || m.carburant === carburantVal)
-      && (!tractiuneVal || m.tractiune === tractiuneVal)
-      && (
-        !pretVal ||
-        (pretVal === "3000" && pretCurat <= 3000) ||
-        (pretVal === "5000" && pretCurat <= 5000) ||
-        (pretVal === "10000" && pretCurat <= 10000) ||
-        (pretVal === "10001" && pretCurat > 10000)
-      );
-  });
+      return (!marcaVal || m.marca?.toLowerCase() === marcaVal.toLowerCase())
+        && (!cutieVal || m.cutie === cutieVal)
+        && (!carburantVal || m.carburant === carburantVal)
+        && (!tractiuneVal || m.tractiune === tractiuneVal)
+        && (
+          !pretVal ||
+          (pretVal === "3000" && pretCurat <= 3000) ||
+          (pretVal === "5000" && pretCurat <= 5000) ||
+          (pretVal === "10000" && pretCurat <= 10000) ||
+          (pretVal === "10001" && pretCurat > 10000)
+        );
+    });
 
-  afiseazaMasini(filtrate);
-};
+    afiseazaMasini(filtrate);
+  };
 
   reseteaza.onclick = () => {
     marca.value = "";
