@@ -1,0 +1,44 @@
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+  import { getFirestore, collection, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDwlwNbcJm63HnS-8Qic97Y5EVEwv1PLcE",
+    authDomain: "auto-sh-buhusi.firebaseapp.com",
+    projectId: "auto-sh-buhusi",
+    storageBucket: "auto-sh-buhusi.appspot.com",
+    messagingSenderId: "343562966028",
+    appId: "1:343562966028:web:46f23ad72b566e37638a29"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  function formatMarca(marca) {
+    if (!marca) return "";
+    marca = marca.trim().toLowerCase();
+    return marca.charAt(0).toUpperCase() + marca.slice(1);
+  }
+
+  async function normalizeazaMarci() {
+    const snapshot = await getDocs(collection(db, "masini"));
+    const updatePromises = [];
+
+    snapshot.forEach(docSnap => {
+      const masina = docSnap.data();
+      const marcaOriginala = masina.marca;
+      const marcaNoua = formatMarca(marcaOriginala);
+
+      if (marcaNoua !== marcaOriginala) {
+        console.log(`Actualizez ${docSnap.id}: '${marcaOriginala}' → '${marcaNoua}'`);
+        const docRef = doc(db, "masini", docSnap.id);
+        updatePromises.push(updateDoc(docRef, { marca: marcaNoua }));
+      }
+    });
+
+    await Promise.all(updatePromises);
+    console.log("Toate mărcile au fost normalizate!");
+  }
+
+  normalizeazaMarci();
+</script>
