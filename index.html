@@ -40,6 +40,35 @@
       font-size: 24px;
       font-weight: bold;
     }
+    .header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.contact-button {
+  background-color: transparent;
+  border: 2px solid white;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.contact-button:hover {
+  background-color: white;
+  color: #b86910;
+}
+
 
     .container {
       max-width: 1200px;
@@ -145,7 +174,13 @@
 </head>
 <body>
 
-<header>AutoSH Buhuşi</header>
+<header>
+  <div class="header-container">
+    <span class="logo">AutoSH Buhuşi</span>
+    <a href="contact.html" class="contact-button">Contact</a>
+  </div>
+</header>
+
 
 <div class="container">
   <div class="filtre">
@@ -263,30 +298,31 @@
     });
   }
 
-  aplica.onclick = () => {
-    const marcaVal = marca.value;
-    const pretVal = pret.value;
-    const cutieVal = cutie.value;
-    const carburantVal = carburant.value;
-    const tractiuneVal = tractiune.value;
+aplica.onclick = () => {
+  const marcaVal = marca.value.trim();
+  const pretVal = pret.value;
+  const cutieVal = cutie.value;
+  const carburantVal = carburant.value;
+  const tractiuneVal = tractiune.value;
 
-    const filtrate = masini.filter(m => {
-      const pretCurat = parseInt(String(m.pret).replace(/\./g, ''));
-      return (!marcaVal || m.marca === marcaVal)
-        && (!cutieVal || m.cutie === cutieVal)
-        && (!carburantVal || m.carburant === carburantVal)
-        && (!tractiuneVal || m.tractiune === tractiuneVal)
-        && (
-          !pretVal ||
-          (pretVal === "3000" && pretCurat <= 3000) ||
-          (pretVal === "5000" && pretCurat <= 5000) ||
-          (pretVal === "10000" && pretCurat <= 10000) ||
-          (pretVal === "10001" && pretCurat > 10000)
-        );
-    });
+  const filtrate = masini.filter(m => {
+    const pretCurat = parseInt(String(m.pret).replace(/\./g, ''));
 
-    afiseazaMasini(filtrate);
-  };
+    return (!marcaVal || m.marca?.toLowerCase() === marcaVal.toLowerCase())
+      && (!cutieVal || m.cutie === cutieVal)
+      && (!carburantVal || m.carburant === carburantVal)
+      && (!tractiuneVal || m.tractiune === tractiuneVal)
+      && (
+        !pretVal ||
+        (pretVal === "3000" && pretCurat <= 3000) ||
+        (pretVal === "5000" && pretCurat <= 5000) ||
+        (pretVal === "10000" && pretCurat <= 10000) ||
+        (pretVal === "10001" && pretCurat > 10000)
+      );
+  });
+
+  afiseazaMasini(filtrate);
+};
 
   reseteaza.onclick = () => {
     marca.value = "";
