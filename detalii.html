@@ -261,7 +261,7 @@
   window.deschideLightbox = deschideLightbox;
   window.inchideLightbox = inchideLightbox;
 
-  function afiseazaDotari(dotari) {
+  (function afiseazaDotari(dotari) {
     const categorii = {
       "Confort & interior": ["Aer condiționat", "Climă automată", "Scaune electrice", "Tapițerie din piele", "Tapițerie din velur", "Încălzire adițională - Webasto", "Geamuri electrice", "Oglinzi electrice și încălzite", "Trapa"],
       "Sisteme de siguranță": ["ABS", "ESP", "Airbag", "Imobilizator", "Isofix", "ASR", "Pilot automat", "Servodirecție"],
@@ -271,7 +271,7 @@
       "Sisteme multimedia & conectivitate": ["Radio-CD cu mp3", "Bluetooth", "Computer de bord", "Navigație"]
       "Asistență la condus & parcare": ["Senzori de parcare față și spate", "Parkassist", "Video cameră"]
       "Altele": ["Cârlig de remorcare", "Alarmă", "ITP valabil"]
-    };
+    })();
 
     const ramase = [];
     const dotariPeCategorie = {};
