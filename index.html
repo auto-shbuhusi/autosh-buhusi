@@ -281,6 +281,8 @@
   async function incarcaMasini() {
     const snapshot = await getDocs(collection(db, "masini"));
     masini = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    masini.sort((a, b) => a.marca.localeCompare(b.marca));
+
     afiseazaMasini(masini);
   }
 
@@ -347,3 +349,4 @@
 
 </body>
 </html>
+
